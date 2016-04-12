@@ -7,11 +7,11 @@ import java.util.*;
  * This is the skeleton code for the EmailServer Class. This is a private email
  * server for you and your friends to communicate.
  * 
- * @author (Your Name) <(YourEmail@purdue.edu)>
+ * @author Temidayo Adelakin tadelaki@purdue.edu
  * 
- * @lab (Your Lab Section)
+ * @lab L11
  * 
- * @version (Today's Date)
+ * @version April 11, 2016
  *
  */
 
