@@ -12,10 +12,6 @@ public class DynamicBuffer {
     private int maxEmails;
     private int totalEmails;
 
-    public Email[] getEmails() {
-        return emails;
-    }
-
     private Email[] emails;
     private final int initSize;
 

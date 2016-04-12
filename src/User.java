@@ -46,15 +46,25 @@ public class User {
     }
 
     // remove an email with the specified emailID
+    // TODO: Gonna come back to this later
     public boolean removeEmail(long emailID) {
-        Email[] emails = inbox.getEmails();
-        for (int i = 0; i < emails.length; i++) {
-            if (emails[i].getID() == emailID) {
-                inbox.remove(i);
-                return true;
+
+        //System.out.println("Email id i'm looking for is: " + emailID);
+        int numElements = inbox.numElements();
+        Email[] emails = inbox.getNewest(numElements);
+        for (int i = 0; i < numElements; i++) {
+            //System.out.println("Email ID I have for is: " + emails[i].getID());
+            if (emails[i] != null) {
+                if (emails[i].getID() == emailID) {
+                    inbox.remove(i);
+                    //System.out.println("Removed email");
+                    //System.out.println("Returning true");
+                    return true;
+                }
             }
         }
 
+        //System.out.println("Returning false");
         return false;
     }
 }
