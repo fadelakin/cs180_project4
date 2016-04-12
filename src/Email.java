@@ -1,7 +1,13 @@
 import java.util.Date;
 
 /**
- * Created by temidayo on 4/11/16.
+ * CS 180 - Project 4 - Email
+ *
+ * @author Temidayo Adelakin, tadelaki@purdue.edu
+ *
+ * @lab L11
+ *
+ * @version April 11, 2016
  */
 public class Email {
 

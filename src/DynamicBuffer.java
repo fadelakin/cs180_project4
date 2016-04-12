@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 /**
  * CS 180 - Project 4 - Dynamic Buffer
  *
@@ -87,7 +85,7 @@ public class DynamicBuffer {
             for (int i = 0; i < totalEmails; i++) {
                 emails[i] = this.emails[i];
             }
-            
+
             this.emails = emails;
         }
 
