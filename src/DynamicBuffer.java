@@ -28,9 +28,7 @@ public class DynamicBuffer {
 
     // return the length of the array
     public int getBufferSize() {
-        System.out.println("length of emails at end: " + emails.length);
         checkBufferSize();
-        System.out.println("length of emails at end: " + emails.length);
         return emails.length;
     }
 
@@ -58,19 +56,6 @@ public class DynamicBuffer {
     // Note: the buffer size should never be lower than the initial size.
     public boolean remove(int index) {
 
-        /* Don't think this method would work so I commented it out for now.
-        if (emails[index] != null) {
-            for (int i = 0; i < totalEmails; i++) {
-                for (int j = i; j < totalEmails - 1; j++) {
-                    emails[j] = emails[j + 1];
-                }
-
-                emails[totalEmails - 1] = null;
-                totalEmails--;
-            }
-        }
-        */
-
         for(int i = 0; i < totalEmails; i++) {
             if (emails[index] != null && emails[index] == emails[i]) {
                 for (int j = i; j < totalEmails - 1; j++) {
@@ -96,17 +81,12 @@ public class DynamicBuffer {
             }
 
             Email[] emails = new Email[maxEmails];
-            //System.arraycopy(this.emails, 0, emails, 0, this.emails.length);
             for (int i = 0; i < totalEmails; i++) {
                 emails[i] = this.emails[i];
             }
             System.out.println("length of emails at buffer 1: " + emails.length);
             this.emails = emails;
         }
-
-        /*if ((totalEmails <= (emails.length / 2) / 2) && totalEmails != 0) {
-            System.out.println("DING DING DING");
-        }*/
 
         if (totalEmails == emails.length) {
             maxEmails *=2;
