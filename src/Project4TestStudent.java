@@ -306,7 +306,7 @@ public class Project4TestStudent {
 	 * User
 	 *
 	 ********************************************************************************************************/
-	/*@Test(timeout=1000)
+	@Test(timeout=1000)
 	public void testUserInit() {
 		String name = "testuser2";
 		String password = "testpassword2";
@@ -397,6 +397,7 @@ public class Project4TestStudent {
 		}
 	}
 
+    /*
 	*//********************************************************************************************************
 	 *
 	 * EmailServer.parseRequest
