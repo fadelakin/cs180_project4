@@ -87,7 +87,7 @@ public class DynamicBuffer {
             for (int i = 0; i < totalEmails; i++) {
                 emails[i] = this.emails[i];
             }
-            System.out.println("length of emails at buffer 1: " + emails.length);
+            
             this.emails = emails;
         }
 
@@ -98,7 +98,7 @@ public class DynamicBuffer {
             for (int i = 0; i < totalEmails; i++) {
                 emails[i] = this.emails[i];
             }
-            System.out.println("length of emails at buffer 2: " + emails.length);
+
             this.emails = emails;
         }
     }
@@ -109,12 +109,16 @@ public class DynamicBuffer {
     // return null if the buffer is empty or an invalid number of emails is requested (e.g. -1)
     public Email[] getNewest(int n) {
 
-        if (n > totalEmails) {
+        if (n > emails.length) {
             return this.emails;
         }
 
+        if (n > totalEmails && totalEmails == 0) {
+            return null;
+        }
+
         if (emails.length == 0 || n < 0) {
-            System.out.println("Either n is less than 0 or emails length is 0");
+            // Either n is less than 0 or emails length is 0
             return null;
         }
 
