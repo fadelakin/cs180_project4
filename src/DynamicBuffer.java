@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 /**
  * CS 180 - Project 4 - Dynamic Buffer
  *
@@ -72,6 +74,7 @@ public class DynamicBuffer {
         return false;
     }
 
+    // checks the buffer size and acts accordingly
     private void checkBufferSize() {
         if (totalEmails <= (emails.length / 2) / 2) {
             maxEmails /= 2;
@@ -100,7 +103,31 @@ public class DynamicBuffer {
         }
     }
 
+    // gets the n most recently added emails to the buffer (the last n)
+    // returned emails must be sorted from most recently to least recently added to the buffer.
+    // return all emails if n is greater than the number of emails in the buffer
+    // return null if the buffer is empty or an invalid number of emails is requested (e.g. -1)
     public Email[] getNewest(int n) {
-        return new Email[maxEmails];
+
+        if (n > totalEmails) {
+            return this.emails;
+        }
+
+        if (emails.length == 0 || n < 0) {
+            System.out.println("Either n is less than 0 or emails length is 0");
+            return null;
+        }
+
+        Email[] newestEmails = new Email[n];
+
+        int counter;
+        int back = 1;
+
+        for (counter = 0; counter < n; counter++) {
+            newestEmails[counter] = emails[totalEmails - back];
+            back++;
+        }
+
+        return newestEmails;
     }
 }
