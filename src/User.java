@@ -1,3 +1,5 @@
+import java.util.regex.Pattern;
+
 /**
  * CS 180 - Project 4 - User class
  *
@@ -66,5 +68,27 @@ public class User {
 
         //System.out.println("Returning false");
         return false;
+    }
+
+    public static boolean checkUser(String username, String password) {
+
+        boolean usernameLength = false, passwordLength = false;
+        if (username.length() >= 1 && username.length() <= 20) {
+            usernameLength = true;
+        }
+
+        if (password.length() >= 4 && password.length() <= 20) {
+            passwordLength = true;
+        }
+
+        if (!passwordLength || !usernameLength)
+            return false;
+
+        Pattern pattern = Pattern.compile("[^a-zA-Z0-9]");
+        boolean userNameHasSpecialChar = pattern.matcher(username).find();
+        boolean passwordHasSpecialChar = pattern.matcher(password).find();
+
+        return !(userNameHasSpecialChar && passwordHasSpecialChar) && !(userNameHasSpecialChar || passwordHasSpecialChar);
+
     }
 }
