@@ -26,6 +26,8 @@ public class EmailServer {
     private boolean verbose = false;
 
     User[] users = new User[100];
+    int numUsers;
+    int numEmails;
 
     public EmailServer() {
         String[] args = {"ADD-USER", "root", "cs180"};
@@ -117,6 +119,9 @@ public class EmailServer {
                 return ErrorFactory.makeErrorMessage(-10);
             }
 
+            if (arr[1].equals("root") && !arr[2].equals("cs180"))
+                return ErrorFactory.makeErrorMessage(-22);
+
             if (arr[1].equals("root")) {
                 return ErrorFactory.makeErrorMessage(-10);
             }
@@ -157,33 +162,22 @@ public class EmailServer {
         return counter;
     }
 
-    public User findUser(String username) {
+    public boolean findUser(String username) {
         for (User u: this.users) {
             if (u.getName().equals(username))
-                return u;
+                return true;
         }
-        return null;
+        return false;
     }
 
     public String addUser(String[] args) {
         users[numUsers()] = (new User(args[1], args[2]));
+        numUsers++;
         return SUCCESS+CRLF;
     }
 
     public String getAllUsers(String[] args) {
-        String username = args[1];
-        String password = args[2];
-        if (this.findUser(username) == null)
-            return ErrorFactory.makeErrorMessage(-20);
-        else if (this.findUser(username).checkPassword(password)) {
-            String success = "SUCCESS";
-            for (User u: users) {
-                success = success + "\t" + u.getName();
-            }
-            return success + "\r\n";
-        }
-        else
-            return "FAILURE\t-20\t" + ErrorFactory.makeErrorMessage(-20) + "\r\n";
+        return "";
     }
 
     public String deleteUser(String[] args) {
