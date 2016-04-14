@@ -102,6 +102,24 @@ public class DynamicBuffer {
         }
     }
 
+    public int deleteEmailbyIndexandID(long emailID) {
+        for (int i = 0; i < totalEmails; i++) {
+            if (emails[i].getID() == emailID)
+                return i;
+        }
+
+        return 0;
+    }
+
+    public boolean doesIDExist(long emailID) {
+        for (int i = 0; i < totalEmails; i++) {
+            if (emails[i].getID() == emailID)
+                return true;
+        }
+
+        return false;
+    }
+
     // gets the n most recently added emails to the buffer (the last n)
     // returned emails must be sorted from most recently to least recently added to the buffer.
     // return all emails if n is greater than the number of emails in the buffer
