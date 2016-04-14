@@ -146,7 +146,11 @@ public class EmailServer {
             }
 
             if (!checkName) {
-                return
+                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
+            }
+
+            if (!checkPass) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
 
             // get all users
@@ -161,16 +165,62 @@ public class EmailServer {
         }
 
         if (parts[0].equals("SEND-EMAIL")) {
+
+            boolean checkName = false;
+            boolean checkPass = false;
+
             if (parts.length != 5) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            }
+
+            if (User.checkUser(parts[1], parts[2])) {
+                for (int i = 0; i < totalUsers; i++) {
+                    if (users[i].getName().equals(parts[1])) {
+                        checkName = true;
+                        if (users[i].checkPassword(parts[2])) {
+                            checkPass = true;
+                        }
+                    }
+                }
+            }
+
+            if (!checkName) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
+            }
+
+            if (!checkPass) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
 
             // send email
         }
 
         if (parts[0].equals("GET-EMAILS")) {
+
+            boolean checkName = false;
+            boolean checkPass = false;
+
             if (parts.length != 4) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            }
+
+            if (User.checkUser(parts[1], parts[2])) {
+                for (int i = 0; i < totalUsers; i++) {
+                    if (users[i].getName().equals(parts[1])) {
+                        checkName = true;
+                        if (users[i].checkPassword(parts[2])) {
+                            checkPass = true;
+                        }
+                    }
+                }
+            }
+
+            if (!checkName) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
+            }
+
+            if (!checkPass) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
 
             // get emails
@@ -178,8 +228,30 @@ public class EmailServer {
 
         if (parts[0].equals("DELETE-EMAIL")) {
 
+            boolean checkName = false;
+            boolean checkPass = false;
+
             if (parts.length != 4) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            }
+
+            if (User.checkUser(parts[1], parts[2])) {
+                for (int i = 0; i < totalUsers; i++) {
+                    if (users[i].getName().equals(parts[1])) {
+                        checkName = true;
+                        if (users[i].checkPassword(parts[2])) {
+                            checkPass = true;
+                        }
+                    }
+                }
+            }
+
+            if (!checkName) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
+            }
+
+            if (!checkPass) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
 
             if (parts[1].equals("root") && !parts[2].equals("cs180")) {
