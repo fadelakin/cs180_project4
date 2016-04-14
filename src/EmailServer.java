@@ -265,6 +265,7 @@ public class EmailServer {
             }
 
             // get emails
+            return getEmails(parts);
         }
 
         if (parts[0].equals("DELETE-EMAIL")) {
@@ -429,7 +430,34 @@ public class EmailServer {
 
     // method to get emails
     public String getEmails(String[] args) {
-        return "";
+
+        String ret = "";
+        int numMessages = Integer.parseInt(args[3]);
+
+        ret = ret.concat(SUCCESS);
+        User user = new User("root", "cs180");
+        Email[] emails;
+
+        for (int i = 0; i < totalUsers; i++) {
+            if (users[i].getName().equals(args[1])) {
+                user = users[i];
+            }
+        }
+
+        if (user != null) {
+            emails = user.retrieveEmail(numMessages);
+
+            if (emails == null || emails.length <= 0) {
+                return ret.concat(CRLF);
+            }
+
+            for (int i = 0; i < numMessages; i++) {
+                ret = ret.concat(DELIMITER).concat(emails[i].getMessage());
+            }
+        }
+
+        return ret.concat(CRLF);
+
     }
 
     // method to delete emails
