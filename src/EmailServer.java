@@ -155,7 +155,7 @@ public class EmailServer {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
 
-            getAllUsers(parts);
+            return getAllUsers(parts);
         }
 
         if (parts[0].equals("DELETE-USER")) {
@@ -190,6 +190,8 @@ public class EmailServer {
             if (!checkPass) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
+
+            return deleteUser(parts);
         }
 
         if (parts[0].equals("SEND-EMAIL")) {
@@ -351,7 +353,7 @@ public class EmailServer {
             }
             users = temp;
             totalUsers++;
-            return "SUCCESS\r\n";
+            return SUCCESS+CRLF;
 
 
         } catch (NumberFormatException e) {
@@ -402,7 +404,27 @@ public class EmailServer {
 
     // method to send email
     public String sendEmail(String[] args) {
-        return SUCCESS+CRLF;
+
+        boolean checkRecipName = false;
+
+        for (int i = 0; i < totalUsers; i++) {
+            if (users[i].getName().equals(args[3])) {
+                checkRecipName = true;
+            }
+        }
+
+        if (!checkRecipName)
+            return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
+
+        Email email =  new Email(args[3], args[1], new Random().nextLong(), args[4]);
+        for (int i = 0; i < totalUsers; i++) {
+            if (users[i].getName().equals(args[1])) {
+                users[i].receiveEmail(email.getSender(), email.getMessage());
+                return SUCCESS+CRLF;
+            }
+        }
+
+        return FAILURE+CRLF;
     }
 
     // method to get emails
@@ -442,7 +464,7 @@ public class EmailServer {
                 }
             }
 
-            return "SUCCESS\r\n";
+            return SUCCESS+CRLF;
 
         } catch (NumberFormatException e) {
             return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
