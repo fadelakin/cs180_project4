@@ -50,7 +50,8 @@ public class DynamicBuffer {
 
     // removes an email at the specified index from the buffer
     // return true if the index is valid and an email is removed; else return false
-    // If the number of emails in the buffer becomes less than or equal to one fourth of the buffer size after the removal,
+    // If the number of emails in the buffer
+    // > becomes less than or equal to one fourth of the buffer size after the removal,
     // > shrink the buffer size to half of the current buffer size.
     // Note: the buffer size should never be lower than the initial size.
     public boolean remove(int index) {

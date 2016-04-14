@@ -18,7 +18,6 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        //inbox = new DynamicBuffer(8);
         inbox = new Email[10];
         buffer = new DynamicBuffer(inbox.length);
     }
@@ -64,7 +63,8 @@ public class User {
 
     public static boolean checkUser(String username, String password) {
 
-        boolean usernameLength = false, passwordLength = false;
+        boolean usernameLength = false;
+        boolean passwordLength = false;
         if (username.length() >= 1 && username.length() <= 20) {
             usernameLength = true;
         }
@@ -80,7 +80,8 @@ public class User {
         boolean userNameHasSpecialChar = pattern.matcher(username).find();
         boolean passwordHasSpecialChar = pattern.matcher(password).find();
 
-        return !(userNameHasSpecialChar && passwordHasSpecialChar) && !(userNameHasSpecialChar || passwordHasSpecialChar);
+        return !(userNameHasSpecialChar && passwordHasSpecialChar)
+                && !(userNameHasSpecialChar || passwordHasSpecialChar);
 
     }
 }

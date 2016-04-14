@@ -123,9 +123,6 @@ public class EmailServer {
                         String.format("An exception of %s occurred.", ex.getClass().toString()));
             }
 
-            // change the formatting of the server response so it prints well on the terminal (for testing purposes only)
-            //if (response.startsWith("SUCCESS" + DELIMITER))
-            //	response = response.replace(DELIMITER, NEWLINE);
             if (response.startsWith(FAILURE) && !DELIMITER.equals("\t"))
                 response = response.replace(DELIMITER, "\t");
 
