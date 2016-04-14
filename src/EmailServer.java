@@ -25,13 +25,15 @@ public class EmailServer {
     // Used to print out extra information
     private boolean verbose = false;
 
-    User[] users = new User[100];
-    int numUsers;
+    private User[] users = new User[100];
+    int totalUsers;
     int numEmails;
 
     public EmailServer() {
-        String[] args = {"ADD-USER", "root", "cs180"};
+        //String[] args = {"ADD-USER", "root", "cs180"};
         //this.addUser(args);
+        users[0] = new User("root", "cs180");
+        totalUsers++;
     }
 
 
@@ -117,7 +119,7 @@ public class EmailServer {
             }
 
             if (User.checkUser(parts[1], parts[2])) {
-                //return addUser(parts);
+                return addUser(parts);
             } else {
                 return ErrorFactory.makeErrorMessage(-23);
             }
@@ -167,31 +169,66 @@ public class EmailServer {
 
             if (User.checkUser(parts[1], parts[2])) {
                 //return addUser(parts);
+                return deleteEmails(parts);
             } else {
                 return ErrorFactory.makeErrorMessage(-23);
             }
-
-            deleteEmails(parts);
         }
 
         return ErrorFactory.makeErrorMessage(ErrorFactory.UNKNOWN_COMMAND_ERROR);
     }
 
-    public int numUsers() {
-        int counter = 0;
-        for (User u: this.users) {
-            if (u != null)
-                counter++;
+    public String addUser(String[] args) {
+        try {
+            if (args[2] == null || args[2].length() == 0) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+            }
+
+            for (int i = 1; i < args.length; i++) {
+                if (!isValid(args[i])) {
+                    return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                }
+                if (args[i].length() > 20) {
+                    return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                }
+                if (i == 3) {
+                    if (args[i].length() < 4) {
+                        return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                    }
+                } else if (i == 2) {
+                    if (args[i].length() < 1) {
+                        return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < totalUsers; i++) {
+                if (users[i].getName().equals(args[1])) {
+                    return ErrorFactory.makeErrorMessage(ErrorFactory.USER_EXIST_ERROR);
+                }
+            }
+
+            User newUser = new User(args[1], args[2]);
+            User[] temp = new User[users.length + 1];
+            System.arraycopy(users, 0, temp, 0, users.length);
+            for (int i = 0; i < temp.length; i++) {
+                if (temp[i] == null) {
+                    temp[i] = newUser;
+                }
+            }
+            users = temp;
+            totalUsers++;
+            return "SUCCESS\r\n";
+
+
+        } catch (NumberFormatException e) {
+            return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
         }
-        return counter;
     }
 
-    public boolean findUser(String username) {
-        for (User u: this.users) {
-            if (u.getName().equals(username))
-                return true;
-        }
-        return false;
+    public static boolean isValid(String input) {
+        return input.matches("^[a-zA-Z0-9]*$");
     }
 
     public String getAllUsers(String[] args) {
