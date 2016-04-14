@@ -168,6 +168,7 @@ public class EmailServer {
 
             boolean checkName = false;
             boolean checkPass = false;
+            boolean checkRecip = false;
 
             if (parts.length != 5) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
@@ -184,6 +185,15 @@ public class EmailServer {
                 }
             }
 
+            for (int i = 0; i < totalUsers; i++) {
+                if (users[i].getName().equals(parts[3])) {
+                    checkRecip = true;
+                }
+            }
+
+            if (!checkRecip)
+                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
+
             if (!checkName) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
             }
@@ -193,6 +203,7 @@ public class EmailServer {
             }
 
             // send email
+            return sendEmail(parts);
         }
 
         if (parts[0].equals("GET-EMAILS")) {
@@ -331,7 +342,7 @@ public class EmailServer {
     }
 
     public String sendEmail(String[] args) {
-        return "";
+        return SUCCESS+CRLF;
     }
 
     public String getEmails(String[] args) {
