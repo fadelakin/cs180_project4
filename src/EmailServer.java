@@ -155,7 +155,7 @@ public class EmailServer {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
 
-            // get all users
+            getAllUsers(parts);
         }
 
         if (parts[0].equals("DELETE-USER")) {
@@ -365,7 +365,14 @@ public class EmailServer {
 
     // method to get all users
     public String getAllUsers(String[] args) {
-        return "";
+
+        String ret = "";
+        ret = ret.concat(SUCCESS);
+        for (int i = 0; i < totalUsers; i++) {
+            ret = ret.concat(DELIMITER).concat(users[i].getName());
+        }
+
+        return ret.concat(CRLF);
     }
 
     // method to delete user
