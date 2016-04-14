@@ -126,35 +126,54 @@ public class EmailServer {
         }
 
         if (parts[0].equals("GET-ALL-USERS")) {
+
+            boolean checkName = false;
+            boolean checkPass = false;
+
             if (parts.length != 3) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
-            } else {
-                // get all users
             }
+
+            if (User.checkUser(parts[1], parts[2])) {
+                for (int i = 0; i < totalUsers; i++) {
+                    if (users[i].getName().equals(parts[1])) {
+                        checkName = true;
+                        if (users[i].checkPassword(parts[2])) {
+                            checkPass = true;
+                        }
+                    }
+                }
+            }
+
+            if (!checkName) {
+                return
+            }
+
+            // get all users
         }
 
         if (parts[0].equals("DELETE-USER")) {
             if (parts.length != 3) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
-            } else {
-                // delete user
             }
+
+            // delete user
         }
 
         if (parts[0].equals("SEND-EMAIL")) {
             if (parts.length != 5) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
-            } else {
-                // send email
             }
+
+            // send email
         }
 
         if (parts[0].equals("GET-EMAILS")) {
             if (parts.length != 4) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
-            } else {
-                // get email
             }
+
+            // get emails
         }
 
         if (parts[0].equals("DELETE-EMAIL")) {
