@@ -503,6 +503,62 @@ public class EmailServer {
 
     // method to delete user
     public String deleteUser(String[] args) {
+
+        if (!maps.isEmpty() && args.length == 2) {
+            // email server was constructed with the file
+            try {
+                PrintWriter writer = new PrintWriter(file);
+                StringBuilder sb = new StringBuilder();
+                for (Object o : maps.entrySet()) {
+                    Map.Entry pair = (Map.Entry) o;
+                    sb.append(pair.getKey());
+                    sb.append(",");
+                    sb.append(pair.getValue());
+                    sb.append("\n");
+                }
+                writer.write(sb.toString());
+                writer.close();
+                return SUCCESS.concat(CRLF);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!maps.isEmpty()) {
+            // email server was constructed with the file
+            try {
+
+                for(Object o : maps.entrySet()) {
+                    Map.Entry pair = (Map.Entry) o;
+                    if (pair.getKey().equals(args[1])) {
+                        if (pair.getValue().equals(args[2])) {
+                            maps.remove(pair.getKey());
+                            break;
+                        }
+                    }
+                }
+
+                PrintWriter writer = new PrintWriter(file);
+                StringBuilder sb = new StringBuilder();
+                for (Object o : maps.entrySet()) {
+                    Map.Entry pair = (Map.Entry) o;
+                    if (pair.getKey().equals("root")) {
+                    } else if (pair.getKey().equals("run")) {
+                    } else {
+                        sb.append(pair.getKey());
+                        sb.append(",");
+                        sb.append(pair.getValue());
+                        sb.append("\n");
+                    }
+                }
+                writer.write(sb.toString());
+                writer.close();
+                return SUCCESS.concat(CRLF);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
 
             if (args[1].equals("root")) {
