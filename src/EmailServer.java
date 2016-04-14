@@ -31,7 +31,7 @@ public class EmailServer {
 
     public EmailServer() {
         String[] args = {"ADD-USER", "root", "cs180"};
-        this.addUser(args);
+        //this.addUser(args);
     }
 
 
@@ -84,73 +84,97 @@ public class EmailServer {
      */
     public String parseRequest(String request) {
 
-        String[] arr = request.split("\t");
-        String[] commands = {"ADD-USER", "GET-ALL-USERS", "DELETE-USER", "SEND-EMAIL", "GET-EMAILS", "DELETE-EMAIL"};
-        int index = -1;
-        String temp = "";
-
-        if (arr[arr.length - 1].contains("\r\n")) {
-            int seq = arr[arr.length - 1].indexOf("\r\n");
-            temp += arr[arr.length - 1].substring(0, seq);
-            arr[arr.length - 1] = temp;
+        if (request.startsWith("\t")) {
+            return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+        } else if (request.endsWith("\t")) {
+            return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+        } else if (!request.endsWith("\r\n")) {
+            return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
         }
 
-        for (int i = 0; i < commands.length; i++) {
-            if (arr[0].equals(commands[i])) {
-                index = i;
-                break;
+        String sub = request.substring(0, request.length() - 2);
+        String[] parts = sub.split("\t");
+
+        if (parts.length == 1)
+            return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+
+        if (!parts[0].equals("ADD-USER") && !parts[0].equals("GET-ALL-USERS")
+                && !parts[0].equals("DELETE_USER") && !parts[0].equals("SEND-EMAIL")
+                && !parts[0].equals("GET-EMAILS") && !parts[0].equals("DELETE-EMAIL")) {
+            return ErrorFactory.makeErrorMessage(ErrorFactory.UNKNOWN_COMMAND_ERROR);
+        }
+
+        if (parts[0].equals("ADD-USER")) {
+            if (parts.length != 3) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
             }
-        }
-
-        if (index == -1) {
-            return ErrorFactory.makeErrorMessage(-11);
-        }
-
-        if (index  == 5) {
-            if (arr.length != 4) {
-                return ErrorFactory.makeErrorMessage(-10);
-            }
-
-
-        }
-
-        if (index == 0 || index == 1 || index == 2 || index == 3 || index == 4) {
-            if (arr.length != 3) {
-                return ErrorFactory.makeErrorMessage(-10);
-            }
-
-            if (arr[1].equals("root") && !arr[2].equals("cs180"))
+            if (parts[1].equals("root") && !parts[2].equals("cs180")) {
                 return ErrorFactory.makeErrorMessage(-22);
+            }
 
-            if (arr[1].equals("root")) {
+            if (parts[1].equals("root")) {
                 return ErrorFactory.makeErrorMessage(-10);
+            }
+
+            if (User.checkUser(parts[1], parts[2])) {
+                //return addUser(parts);
+            } else {
+                return ErrorFactory.makeErrorMessage(-23);
             }
         }
 
-        switch (index) {
-            case 0:
-                if (User.checkUser(arr[1], arr[2])) {
-                    return addUser(arr);
-                } else {
-                    return ErrorFactory.makeErrorMessage(-23);
-                }
-            case 1:
-                return getAllUsers(arr);
-            case 2:
-                return deleteUser(arr);
-            case 3:
-                return sendEmail(arr);
-            case 4:
-                return getEmails(arr);
-            case 5:
-                if (User.checkUser(arr[1], arr[2])) {
-                    return deleteEmails(arr);
-                } else {
-                    return ErrorFactory.makeErrorMessage(-23);
-                }
-            default:
-                return "Invalid";
+        if (parts[0].equals("GET-ALL-USERS")) {
+            if (parts.length != 3) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            } else {
+                // get all users
+            }
         }
+
+        if (parts[0].equals("DELETE-USER")) {
+            if (parts.length != 3) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            } else {
+                // delete user
+            }
+        }
+
+        if (parts[0].equals("SEND-EMAIL")) {
+            if (parts.length != 5) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            } else {
+                // send email
+            }
+        }
+
+        if (parts[0].equals("GET-EMAILS")) {
+            if (parts.length != 4) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            } else {
+                // get email
+            }
+        }
+
+        if (parts[0].equals("DELETE-EMAIL")) {
+
+            if (parts.length != 4) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
+            }
+
+            if (parts[1].equals("root") && !parts[2].equals("cs180")) {
+                return ErrorFactory.makeErrorMessage(-22);
+            }
+
+            if (User.checkUser(parts[1], parts[2])) {
+                //return addUser(parts);
+            } else {
+                return ErrorFactory.makeErrorMessage(-23);
+            }
+
+            deleteEmails(parts);
+        }
+
+        return ErrorFactory.makeErrorMessage(ErrorFactory.UNKNOWN_COMMAND_ERROR);
     }
 
     public int numUsers() {
@@ -168,12 +192,6 @@ public class EmailServer {
                 return true;
         }
         return false;
-    }
-
-    public String addUser(String[] args) {
-        users[numUsers()] = (new User(args[1], args[2]));
-        numUsers++;
-        return SUCCESS+CRLF;
     }
 
     public String getAllUsers(String[] args) {
