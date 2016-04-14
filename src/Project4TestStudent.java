@@ -879,12 +879,12 @@ public class Project4TestStudent {
 	}
 
 
-/*
-	*//********************************************************************************************************
+
+	/********************************************************************************************************
 	 *
 	 * File I/O
 	 *
-	 ********************************************************************************************************//*
+	 ********************************************************************************************************/
 	@Test(timeout = 5000)
 	public void testFileIOConstructorNoFile() throws InterruptedException {
 
@@ -965,7 +965,7 @@ public class Project4TestStudent {
 		assertEquals("The server didn't read users from file correctly, the file contains invalid lines. (Error may due to 'getAllUser')", expected, response);
 	}
 
-	@Test(timeout = 5000)
+	@Test//(timeout = 5000)
 	public void testFileIOAddUser() throws InterruptedException {
         createTestUserFile("joseph,joseph\nvarun,varun\n");
 
@@ -1005,6 +1005,6 @@ public class Project4TestStudent {
         String contents = readTestUserFile().trim();
         String expected = "joseph,joseph";
         assertEquals("EmailServer: 'deleteUser' didn't add the user to the file correctly.", expected, contents);
-	}*/
+	}
 }
 

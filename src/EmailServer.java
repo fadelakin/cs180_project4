@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.*;
 
 /**
@@ -28,9 +29,74 @@ public class EmailServer {
     private User[] users = new User[100];
     int totalUsers;
 
+    LinkedHashMap<String, String> maps = new LinkedHashMap<>();
+    private File file;
+
     public EmailServer() {
         users[0] = new User("root", "cs180");
         totalUsers++;
+    }
+
+    public EmailServer(String fileName) throws IOException {
+
+        maps.put("root", "cs180");
+
+        file = new File(fileName);
+
+        if (!file.exists()) {
+            file.createNewFile();
+
+            BufferedReader reader;
+            String line;
+            String cvsSplitBy = ",";
+
+            try {
+                reader = new BufferedReader(new FileReader(file));
+                while ((line = reader.readLine()) != null) {
+
+                    // use comma as separator
+                    String[] users = line.split(cvsSplitBy);
+
+                    // using a hashmap allows us to forgo checking for duplicate users
+                    // because the key would be the same but the value would change per hashmap rules
+                    // > The prior value for the key is dropped and replaced with the new one.
+                    if (users.length == 2) {
+                        maps.put(users[0], users[1]);
+                        addUser(users);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            BufferedReader reader;
+            String line;
+            String cvsSplitBy = ",";
+
+            try {
+                reader = new BufferedReader(new FileReader(file));
+                while ((line = reader.readLine()) != null) {
+
+                    line = line.trim();
+
+                    // use comma as separator
+                    if (line.split(cvsSplitBy).length != 0 && !line.equals("") && !line.isEmpty()) {
+                        String[] users = line.split(cvsSplitBy);
+
+                        // using a hashmap allows us to forgo checking for duplicate users
+                        // because the key would be the same but the value would change per hashmap rules
+                        // > The prior value for the key is dropped and replaced with the new one.
+                        if (users.length == 2) {
+                            maps.put(users[0], users[1]);
+                            addUser(users);
+                        }
+                    }
+
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -310,6 +376,54 @@ public class EmailServer {
     // method to add a user
     public String addUser(String[] args) {
 
+        if (!maps.isEmpty() && args.length == 2) {
+            // email server was constructed with the file
+            try {
+                PrintWriter writer = new PrintWriter(file);
+                StringBuilder sb = new StringBuilder();
+                for (Object o : maps.entrySet()) {
+                    Map.Entry pair = (Map.Entry) o;
+                    sb.append(pair.getKey());
+                    sb.append(",");
+                    sb.append(pair.getValue());
+                    sb.append("\n");
+                }
+                writer.write(sb.toString());
+                writer.close();
+                return SUCCESS.concat(CRLF);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!maps.isEmpty()) {
+            // email server was constructed with the file
+            try {
+                PrintWriter writer = new PrintWriter(file);
+                StringBuilder sb = new StringBuilder();
+                for (Object o : maps.entrySet()) {
+                    Map.Entry pair = (Map.Entry) o;
+                    if (pair.getKey().equals("root")) {
+                    } else if (pair.getKey().equals("run")) {
+                    } else {
+                        sb.append(pair.getKey());
+                        sb.append(",");
+                        sb.append(pair.getValue());
+                        sb.append("\n");
+                    }
+                }
+                sb.append(args[1]);
+                sb.append(",");
+                sb.append(args[2]);
+                sb.append("\n");
+                writer.write(sb.toString());
+                writer.close();
+                return SUCCESS.concat(CRLF);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try {
 
             if (args[2] == null || args[2].length() == 0) {
@@ -351,7 +465,7 @@ public class EmailServer {
             }
             users = temp;
             totalUsers++;
-            return SUCCESS+CRLF;
+            return SUCCESS.concat(CRLF);
 
 
         } catch (NumberFormatException e) {
@@ -368,6 +482,18 @@ public class EmailServer {
 
         String ret = "";
         ret = ret.concat(SUCCESS);
+
+        if (!maps.isEmpty()) {
+
+            Set<String> userNames = maps.keySet();
+
+            for (String userName : userNames) {
+                ret = ret.concat(DELIMITER).concat(userName);
+            }
+
+            return ret.concat(CRLF);
+        }
+
         for (int i = 0; i < totalUsers; i++) {
             ret = ret.concat(DELIMITER).concat(users[i].getName());
         }
