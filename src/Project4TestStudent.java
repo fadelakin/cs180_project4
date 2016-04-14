@@ -792,7 +792,7 @@ public class Project4TestStudent {
 		for (i = 1, j = splittedStr.length-1 ; i < splittedStr.length ; i++, j--) {
 			splittedEmailStr = splittedStr[i].split(";");
 			assertEquals("tesGetEmails(): 'GET-EMAILS' doesn't return correct success message or didn't succeed when it should have.",
-				     String.format(" From: root \"message%d\"", j), splittedEmailStr[2]);
+ 				     String.format(" From: root \"message%d\"", j), splittedEmailStr[2]);
 		}
 
 		// exist 1 get 10
@@ -832,12 +832,12 @@ public class Project4TestStudent {
 				     String.format(" From: root \"message%d\"", j), splittedEmailStr[2]);
 		}
 	}
-/*
-	*//********************************************************************************************************
+
+	/********************************************************************************************************
 	 *
 	 * EmailServer.deleteEmail
 	 *
-	 ********************************************************************************************************//*
+	 ********************************************************************************************************/
 	@Test(timeout=1000)
 	public void testDeleteEmails() {
 		EmailServer server = new EmailServer();
@@ -879,7 +879,7 @@ public class Project4TestStudent {
 	}
 
 
-
+/*
 	*//********************************************************************************************************
 	 *
 	 * File I/O

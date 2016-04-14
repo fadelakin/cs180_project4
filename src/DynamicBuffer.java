@@ -145,8 +145,10 @@ public class DynamicBuffer {
         int back = 1;
 
         for (counter = 0; counter < n; counter++) {
-            newestEmails[counter] = emails[totalEmails - back];
-            back++;
+            if (back <= totalEmails) {
+                newestEmails[counter] = emails[totalEmails - back];
+                back++;
+            }
         }
 
         return newestEmails;

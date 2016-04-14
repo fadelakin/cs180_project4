@@ -300,8 +300,14 @@ public class EmailServer {
                 return ErrorFactory.makeErrorMessage(-22);
             }
 
+            for (int i = 0; i < totalUsers; i++) {
+                if (users[i].getName().equals(parts[1])) {
+                    return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                }
+            }
+
             if (User.checkUser(parts[1], parts[2])) {
-                return deleteEmails(parts);
+                return deleteEmail(parts);
             } else {
                 return ErrorFactory.makeErrorMessage(-23);
             }
@@ -419,7 +425,7 @@ public class EmailServer {
 
         Email email =  new Email(args[3], args[1], new Random().nextLong(), args[4]);
         for (int i = 0; i < totalUsers; i++) {
-            if (users[i].getName().equals(args[1])) {
+            if (users[i].getName().equals(args[3])) {
                 users[i].receiveEmail(email.getSender(), email.getMessage());
                 return SUCCESS+CRLF;
             }
@@ -452,7 +458,9 @@ public class EmailServer {
             }
 
             for (int i = 0; i < numMessages; i++) {
-                ret = ret.concat(DELIMITER).concat(emails[i].getMessage());
+                if (emails[i] != null) {
+                    ret = ret.concat(DELIMITER).concat(emails[i].toString());
+                }
             }
         }
 
@@ -461,7 +469,8 @@ public class EmailServer {
     }
 
     // method to delete emails
-    public String deleteEmails(String[] args) {
+    public String deleteEmail(String[] args) {
+
         try {
 
             if (args[2] == null || args[2].length() == 0) {
@@ -474,11 +483,6 @@ public class EmailServer {
                 }
                 if (args[i].length() > 20) {
                     return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
-                }
-                if (i == 3) {
-                    if (args[i].length() < 4) {
-                        return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
-                    }
                 } else if (i == 2) {
                     if (args[i].length() < 1) {
                         return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
@@ -486,9 +490,42 @@ public class EmailServer {
                 }
             }
 
+            String ret = "";
+
+            long emailID = Long.parseLong(args[3]);
+
+            ret = ret.concat(SUCCESS);
+            User user = new User("root", "cs180");
+            Email[] emails;
+
             for (int i = 0; i < totalUsers; i++) {
                 if (users[i].getName().equals(args[1])) {
+                    user = users[i];
+                }
+            }
+
+            if (user != null) {
+
+                int numEmails = user.numEmail();
+                emails = user.retrieveEmail(numEmails + 1);
+
+                boolean isEmailID = false;
+                for (int i = 0; i < numEmails; i++) {
+                    if (emails[i].getID() == Long.parseLong(args[3])) {
+                        isEmailID = true;
+                        break;
+                    }
+                }
+
+                if(!isEmailID) {
                     return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                }
+
+                for (int i = 0; i < numEmails; i++) {
+                    if (emails[i].getID() == emailID) {
+                        user.removeEmail(emailID);
+                        return SUCCESS.concat(CRLF);
+                    }
                 }
             }
 
