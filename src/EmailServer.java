@@ -27,11 +27,8 @@ public class EmailServer {
 
     private User[] users = new User[100];
     int totalUsers;
-    int numEmails;
 
     public EmailServer() {
-        //String[] args = {"ADD-USER", "root", "cs180"};
-        //this.addUser(args);
         users[0] = new User("root", "cs180");
         totalUsers++;
     }
@@ -300,12 +297,6 @@ public class EmailServer {
                 return ErrorFactory.makeErrorMessage(-22);
             }
 
-            for (int i = 0; i < totalUsers; i++) {
-                if (users[i].getName().equals(parts[1])) {
-                    return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
-                }
-            }
-
             if (User.checkUser(parts[1], parts[2])) {
                 return deleteEmail(parts);
             } else {
@@ -524,12 +515,12 @@ public class EmailServer {
                 for (int i = 0; i < numEmails; i++) {
                     if (emails[i].getID() == emailID) {
                         user.removeEmail(emailID);
-                        return SUCCESS.concat(CRLF);
+                        return ret.concat(CRLF);
                     }
                 }
             }
 
-            return SUCCESS+CRLF;
+            return ret;
 
         } catch (NumberFormatException e) {
             return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
