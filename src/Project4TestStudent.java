@@ -392,7 +392,6 @@ public class Project4TestStudent {
 		// remove all
 		for (int i = 0 ; i < nEmails; i++) {
 			ret = user.removeEmail(id[i]);
-            System.out.println("Returned value is: " + ret);
 			assertTrue("testUserRemoveEmails(): User.removeEmail(id) returns incorrect value.", ret);
 			assertEquals("testUserRemoveEmails(): User.removeEmail(id) fails..", user.numEmail(), nEmails-1-i);
 		}
@@ -675,12 +674,12 @@ public class Project4TestStudent {
 					ErrorFactory.INVALID_VALUE_ERROR);
 		}
 	}
-/*
-	*//********************************************************************************************************
+
+	/********************************************************************************************************
 	 *
 	 * EmailServer.deleteUser
 	 *
-	 ********************************************************************************************************//*
+	 ********************************************************************************************************/
 	@Test(timeout=1000)
 	public void testDeleteUserNormal() {
 		EmailServer server = new EmailServer();
@@ -711,7 +710,7 @@ public class Project4TestStudent {
 				retStr, ErrorFactory.USERNAME_LOOKUP_ERROR);
 	}
 
-*/
+
 	/*
 	/********************************************************************************************************
 	 *

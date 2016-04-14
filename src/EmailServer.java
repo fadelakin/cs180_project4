@@ -101,12 +101,13 @@ public class EmailServer {
             return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
 
         if (!parts[0].equals("ADD-USER") && !parts[0].equals("GET-ALL-USERS")
-                && !parts[0].equals("DELETE_USER") && !parts[0].equals("SEND-EMAIL")
+                && !parts[0].equals("DELETE-USER") && !parts[0].equals("SEND-EMAIL")
                 && !parts[0].equals("GET-EMAILS") && !parts[0].equals("DELETE-EMAIL")) {
             return ErrorFactory.makeErrorMessage(ErrorFactory.UNKNOWN_COMMAND_ERROR);
         }
 
         if (parts[0].equals("ADD-USER")) {
+
             if (parts.length != 3) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
             }
@@ -123,6 +124,7 @@ public class EmailServer {
             } else {
                 return ErrorFactory.makeErrorMessage(-23);
             }
+
         }
 
         if (parts[0].equals("GET-ALL-USERS")) {
@@ -157,11 +159,37 @@ public class EmailServer {
         }
 
         if (parts[0].equals("DELETE-USER")) {
+
+            boolean checkName = false;
+            boolean checkPass = false;
+
             if (parts.length != 3) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.FORMAT_COMMAND_ERROR);
             }
 
-            // delete user
+            if (User.checkUser(parts[1], parts[2])) {
+                for (int i = 0; i < totalUsers; i++) {
+                    if (users[i].getName().equals(parts[1])) {
+                        checkName = true;
+
+                        if (users[i].getName().equals("root")) {
+                            return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                        }
+
+                        if (users[i].checkPassword(parts[2])) {
+                            checkPass = true;
+                        }
+                    }
+                }
+            }
+
+            if (!checkName) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
+            }
+
+            if (!checkPass) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
+            }
         }
 
         if (parts[0].equals("SEND-EMAIL")) {
@@ -191,9 +219,6 @@ public class EmailServer {
                 }
             }
 
-            if (!checkRecip)
-                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
-
             if (!checkName) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
             }
@@ -201,6 +226,9 @@ public class EmailServer {
             if (!checkPass) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.AUTHENTICATION_ERROR);
             }
+
+            if (!checkRecip)
+                return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
 
             // send email
             return sendEmail(parts);
@@ -270,7 +298,6 @@ public class EmailServer {
             }
 
             if (User.checkUser(parts[1], parts[2])) {
-                //return addUser(parts);
                 return deleteEmails(parts);
             } else {
                 return ErrorFactory.makeErrorMessage(-23);
@@ -280,8 +307,11 @@ public class EmailServer {
         return ErrorFactory.makeErrorMessage(ErrorFactory.UNKNOWN_COMMAND_ERROR);
     }
 
+    // method to add a user
     public String addUser(String[] args) {
+
         try {
+
             if (args[2] == null || args[2].length() == 0) {
                 return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
             }
@@ -333,24 +363,83 @@ public class EmailServer {
         return input.matches("^[a-zA-Z0-9]*$");
     }
 
+    // method to get all users
     public String getAllUsers(String[] args) {
         return "";
     }
 
+    // method to delete user
     public String deleteUser(String[] args) {
-        return "";
+        try {
+
+            if (args[1].equals("root")) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+            }
+
+            for (int i = 0; i < totalUsers; i++) {
+
+                if (users[i].getName().equals(args[1])) {
+                    for (int j = i;j < totalUsers - 1; j++) {
+                        users[j] = users[j + 1];
+                    }
+                    users[totalUsers - 1] = null;
+                    totalUsers--;
+                }
+            }
+
+            return SUCCESS+CRLF;
+        } catch (NumberFormatException e) {
+            return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+        }
     }
 
+    // method to send email
     public String sendEmail(String[] args) {
         return SUCCESS+CRLF;
     }
 
+    // method to get emails
     public String getEmails(String[] args) {
         return "";
     }
 
+    // method to delete emails
     public String deleteEmails(String[] args) {
-        return SUCCESS+CRLF;
+        try {
+
+            if (args[2] == null || args[2].length() == 0) {
+                return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+            }
+
+            for (int i = 1; i < args.length; i++) {
+                if (!isValid(args[i])) {
+                    return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                }
+                if (args[i].length() > 20) {
+                    return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                }
+                if (i == 3) {
+                    if (args[i].length() < 4) {
+                        return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                    }
+                } else if (i == 2) {
+                    if (args[i].length() < 1) {
+                        return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                    }
+                }
+            }
+
+            for (int i = 0; i < totalUsers; i++) {
+                if (users[i].getName().equals(args[1])) {
+                    return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+                }
+            }
+
+            return "SUCCESS\r\n";
+
+        } catch (NumberFormatException e) {
+            return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
+        }
     }
 
     /**
