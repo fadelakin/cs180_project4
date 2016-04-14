@@ -2,10 +2,8 @@
  * CS 180 - Project 4 - Dynamic Buffer
  *
  * @author Temidayo Adelakin, tadelaki@purdue.edu
- *
- * @lab L11
- *
  * @version April 11, 2016
+ * @lab L11
  */
 public class DynamicBuffer {
 
@@ -38,7 +36,7 @@ public class DynamicBuffer {
     public void add(Email email) {
 
         if (totalEmails == maxEmails) {
-            maxEmails *=2;
+            maxEmails *= 2;
 
             Email[] emails = new Email[maxEmails];
             System.arraycopy(this.emails, 0, emails, 0, this.emails.length);
@@ -57,7 +55,7 @@ public class DynamicBuffer {
     // Note: the buffer size should never be lower than the initial size.
     public boolean remove(int index) {
 
-        for(int i = 0; i < totalEmails; i++) {
+        for (int i = 0; i < totalEmails; i++) {
             if (emails[index] != null && emails[index] == emails[i]) {
                 for (int j = i; j < totalEmails - 1; j++) {
                     emails[j] = emails[j + 1];
@@ -91,7 +89,7 @@ public class DynamicBuffer {
         }
 
         if (totalEmails == emails.length) {
-            maxEmails *=2;
+            maxEmails *= 2;
 
             Email[] emails = new Email[maxEmails];
             for (int i = 0; i < totalEmails; i++) {

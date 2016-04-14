@@ -4,10 +4,8 @@ import java.util.Date;
  * CS 180 - Project 4 - Email
  *
  * @author Temidayo Adelakin, tadelaki@purdue.edu
- *
- * @lab L11
- *
  * @version April 11, 2016
+ * @lab L11
  */
 public class Email {
 

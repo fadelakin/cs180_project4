@@ -4,16 +4,13 @@ import java.util.*;
 /**
  * <b> CS 180 - Project 4 - Email Server Skeleton </b>
  * <p>
- *
+ * <p>
  * This is the skeleton code for the EmailServer Class. This is a private email
  * server for you and your friends to communicate.
  *
  * @author Temidayo Adelakin tadelaki@purdue.edu
- *
- * @lab L11
- *
  * @version April 11, 2016
- *
+ * @lab L11
  */
 
 public class EmailServer {
@@ -528,7 +525,7 @@ public class EmailServer {
             // email server was constructed with the file
             try {
 
-                for(Object o : maps.entrySet()) {
+                for (Object o : maps.entrySet()) {
                     Map.Entry pair = (Map.Entry) o;
                     if (pair.getKey().equals(args[1])) {
                         if (pair.getValue().equals(args[2])) {
@@ -568,7 +565,7 @@ public class EmailServer {
             for (int i = 0; i < totalUsers; i++) {
 
                 if (users[i].getName().equals(args[1])) {
-                    for (int j = i;j < totalUsers - 1; j++) {
+                    for (int j = i; j < totalUsers - 1; j++) {
                         users[j] = users[j + 1];
                     }
                     users[totalUsers - 1] = null;
@@ -576,7 +573,7 @@ public class EmailServer {
                 }
             }
 
-            return SUCCESS+CRLF;
+            return SUCCESS + CRLF;
         } catch (NumberFormatException e) {
             return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
         }
@@ -596,15 +593,15 @@ public class EmailServer {
         if (!checkRecipName)
             return ErrorFactory.makeErrorMessage(ErrorFactory.USERNAME_LOOKUP_ERROR);
 
-        Email email =  new Email(args[3], args[1], new Random().nextLong(), args[4]);
+        Email email = new Email(args[3], args[1], new Random().nextLong(), args[4]);
         for (int i = 0; i < totalUsers; i++) {
             if (users[i].getName().equals(args[3])) {
                 users[i].receiveEmail(email.getSender(), email.getMessage());
-                return SUCCESS+CRLF;
+                return SUCCESS + CRLF;
             }
         }
 
-        return FAILURE+CRLF;
+        return FAILURE + CRLF;
     }
 
     // method to get emails
@@ -690,7 +687,7 @@ public class EmailServer {
                     }
                 }
 
-                if(!isEmailID) {
+                if (!isEmailID) {
                     return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
                 }
 
@@ -732,6 +729,7 @@ public class EmailServer {
 
     /**
      * This main method is for testing purposes only.
+     *
      * @param args - the command line arguments
      */
     public static void main(String[] args) {

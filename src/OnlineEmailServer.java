@@ -9,10 +9,8 @@ import java.util.Scanner;
  * CS 180 - Project 4 - Email
  *
  * @author Temidayo Adelakin, tadelaki@purdue.edu
- *
- * @lab L11
- *
  * @version April 14, 2016
+ * @lab L11
  */
 public class OnlineEmailServer extends EmailServer {
 
@@ -42,9 +40,7 @@ public class OnlineEmailServer extends EmailServer {
                     out = new ObjectOutputStream(socket.getOutputStream());
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
-
-                finally {
+                } finally {
                     if (in != null) in.close();
                     if (out != null) out.close();
                 }
@@ -52,5 +48,13 @@ public class OnlineEmailServer extends EmailServer {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void processClient(Socket client) throws IOException {
+        // Handle processing a client's request (input and output)
+    }
+
+    public void stop() {
+        // TODO implement
     }
 }

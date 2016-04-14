@@ -4,10 +4,8 @@ import java.util.regex.Pattern;
  * CS 180 - Project 4 - User class
  *
  * @author Temidayo Adelakin, tadelaki@purdue.edu
- *
- * @lab L11
- *
  * @version April 11, 2016
+ * @lab L11
  */
 public class User {
 
@@ -40,7 +38,7 @@ public class User {
 
     // add message to the user's inbox
     public void receiveEmail(String sender, String message) {
-        Email email =  new Email(username, sender, uEmailID, message);
+        Email email = new Email(username, sender, uEmailID, message);
         uEmailID++;
         buffer.add(email);
     }
