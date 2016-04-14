@@ -13,13 +13,16 @@ public class User {
 
     private String username;
     private String password;
-    private DynamicBuffer inbox;
-    private static int emailID = 0;
+    private Email[] inbox;
+    private DynamicBuffer buffer;
+    private int uEmailID = 0;
 
     public User(String username, String password) {
         this.username = username;
         this.password = password;
-        inbox = new DynamicBuffer(8);
+        //inbox = new DynamicBuffer(8);
+        inbox = new Email[10];
+        buffer = new DynamicBuffer(inbox.length);
     }
 
     public String getName() {
@@ -32,19 +35,19 @@ public class User {
 
     // number of emails in the user's inbox
     public int numEmail() {
-        return inbox.numElements();
+        return buffer.numElements();
     }
 
     // add message to the user's inbox
     public void receiveEmail(String sender, String message) {
-        Email email =  new Email(username, sender, emailID, message);
-        emailID++;
-        inbox.add(email);
+        Email email =  new Email(username, sender, uEmailID, message);
+        uEmailID++;
+        buffer.add(email);
     }
 
     // retrieve the n most recent emails in the user's inbox
     public Email[] retrieveEmail(int n) {
-        return inbox.getNewest(n);
+        return buffer.getNewest(n);
     }
 
     // remove an email with the specified emailID
@@ -52,21 +55,36 @@ public class User {
     public boolean removeEmail(long emailID) {
 
         //System.out.println("Email id i'm looking for is: " + emailID);
-        int numElements = inbox.numElements();
-        Email[] emails = inbox.getNewest(numElements);
-        for (int i = 0; i < numElements; i++) {
+        //int numElements = buffer.numElements();
+        //Email[] emails = buffer.getNewest(numElements);
+        /*for (int i = 0; i < numElements; i++) {
             //System.out.println("Email ID I have for is: " + emails[i].getID());
             if (emails[i] != null) {
                 if (emails[i].getID() == emailID) {
-                    inbox.remove(i);
+                    buffer.remove(i);
                     //System.out.println("Removed email");
                     //System.out.println("Returning true");
                     return true;
                 }
             }
+        }*/
+
+        for (int i = 0; i < buffer.numElements(); i++) {
+            if (emailID == buffer.getNewest(buffer.numElements())[i].getID()) {
+                buffer.remove(i);
+                return true;
+            }
         }
 
         //System.out.println("Returning false");
+
+        /*for (int i = 0; i < buffer.numElements(); i++) {
+            if (emailID == buffer.getNewest(i)[0].getID()) {
+                buffer.remove(i);
+                return true;
+            }
+        }*/
+
         return false;
     }
 

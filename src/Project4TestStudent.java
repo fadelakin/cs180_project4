@@ -392,6 +392,7 @@ public class Project4TestStudent {
 		// remove all
 		for (int i = 0 ; i < nEmails; i++) {
 			ret = user.removeEmail(id[i]);
+            System.out.println("Returned value is: " + ret);
 			assertTrue("testUserRemoveEmails(): User.removeEmail(id) returns incorrect value.", ret);
 			assertEquals("testUserRemoveEmails(): User.removeEmail(id) fails..", user.numEmail(), nEmails-1-i);
 		}
