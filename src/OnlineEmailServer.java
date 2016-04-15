@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * @version April 14, 2016
  * @lab L11
  */
-public class OnlineEmailServer extends EmailServer implements Runnable {
+public class OnlineEmailServer extends EmailServer {
 
     private ServerSocket serverSocket;
     private Socket client;
@@ -38,7 +38,6 @@ public class OnlineEmailServer extends EmailServer implements Runnable {
     }
 
     public void processClient(Socket client) throws IOException {
-        new Thread().start();
         Scanner in = new Scanner(client.getInputStream());
         Pattern pattern = Pattern.compile("(\r\n){2,}");
         in.useDelimiter(pattern);
@@ -47,11 +46,11 @@ public class OnlineEmailServer extends EmailServer implements Runnable {
 
         while (in.hasNextLine()) {
             String line = in.nextLine();
-            //line = line.concat("\r\n");
-            System.out.println(line);
+            line = line.concat("\r\n");
+            //System.out.println(line);
             String response = parseRequest(line);
-            System.out.printf(response);
-            out.printf(response);
+            //System.out.printf(response);
+            out.print(response);
             out.flush();
 
         }
