@@ -21,19 +21,18 @@ public class OnlineEmailServer extends EmailServer {
     public OnlineEmailServer(String filename, int port) throws IOException {
         serverSocket = new ServerSocket(port);
         serverSocket.setReuseAddress(true);
-
-        client = serverSocket.accept();
-        run();
     }
 
     @Override
     public void run() {
         try {
-            while (!client.isClosed()) {
+            while (!serverSocket.isClosed()) {
+                client = serverSocket.accept();
+                //client.setSoTimeout(1000);
                 processClient(client);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 
@@ -42,16 +41,13 @@ public class OnlineEmailServer extends EmailServer {
         Pattern pattern = Pattern.compile("(\r\n){2,}");
         in.useDelimiter(pattern);
 
-        PrintWriter out = new PrintWriter(client.getOutputStream());
+        PrintWriter out = new PrintWriter(client.getOutputStream(), true);
 
         while (in.hasNextLine()) {
             String line = in.nextLine();
             line = line.concat("\r\n");
-            //System.out.println(line);
             String response = parseRequest(line);
-            //System.out.printf(response);
             out.print(response);
-            out.flush();
 
         }
 
@@ -63,10 +59,11 @@ public class OnlineEmailServer extends EmailServer {
 
     public void stop() {
         try {
+            client.close();
             serverSocket.close();
-
+            System.exit(1);
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 
@@ -74,7 +71,7 @@ public class OnlineEmailServer extends EmailServer {
         try {
             new OnlineEmailServer("test_student.csv", 22334).run();
         } catch (IOException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
     }
 }
