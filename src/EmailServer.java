@@ -1,4 +1,5 @@
 import java.io.*;
+import java.security.cert.CRL;
 import java.util.*;
 
 /**
@@ -450,14 +451,7 @@ public class EmailServer {
             }
 
             User newUser = new User(args[1], args[2]);
-            User[] temp = new User[users.length + 1];
-            System.arraycopy(users, 0, temp, 0, users.length);
-            for (int i = 0; i < temp.length; i++) {
-                if (temp[i] == null) {
-                    temp[i] = newUser;
-                }
-            }
-            users = temp;
+            users[totalUsers] = newUser;
             totalUsers++;
             return SUCCESS.concat(CRLF);
 
@@ -560,7 +554,6 @@ public class EmailServer {
             }
 
             for (int i = 0; i < totalUsers; i++) {
-
                 if (users[i].getName().equals(args[1])) {
                     for (int j = i; j < totalUsers - 1; j++) {
                         users[j] = users[j + 1];
@@ -570,7 +563,7 @@ public class EmailServer {
                 }
             }
 
-            return SUCCESS + CRLF;
+            return SUCCESS.concat(CRLF);
         } catch (NumberFormatException e) {
             return ErrorFactory.makeErrorMessage(ErrorFactory.INVALID_VALUE_ERROR);
         }

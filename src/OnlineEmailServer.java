@@ -28,7 +28,6 @@ public class OnlineEmailServer extends EmailServer {
         try {
             while (!serverSocket.isClosed()) {
                 client = serverSocket.accept();
-                //client.setSoTimeout(1000);
                 processClient(client);
             }
         } catch (Exception e) {
@@ -46,8 +45,11 @@ public class OnlineEmailServer extends EmailServer {
         while (in.hasNextLine()) {
             String line = in.nextLine();
             line = line.concat("\r\n");
+            System.out.println(line);
             String response = parseRequest(line);
-            out.print(response);
+            response = response.replaceAll("(\r\n)+", "\r\n");
+            System.out.printf(response);
+            out.printf(response);
 
         }
 
